@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ace307cc7f4432742bbfad74f9eb652a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - block: {fileID: 2620012874362912219, guid: d0c968352a39a234db4d69d97cb40fee, type: 3}
+  - Player: {fileID: 3542065451164398789, guid: 4348e0a54f97fc644a2754c477c04523, type: 3}
+  - Ball: {fileID: 3105167176694352407, guid: 79989dc62e6987447b955d1a375ec2d2, type: 3}
+  - leftSide: {fileID: 8953292129258253805, guid: 858d6cb41eb9dbf46ab2cbe725e592be, type: 3}
+  - rightSide: {fileID: 3003216035257457752, guid: a46c1e7d837d6b6479639e4744ec11f3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
