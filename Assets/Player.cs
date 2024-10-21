@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MyObjects {
     public float speed;
-    private float border = 6;
+    private float border = 7;
     // Start is called before the first frame update
     void Start() {
         speed = 20f;

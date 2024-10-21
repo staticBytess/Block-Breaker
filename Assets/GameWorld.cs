@@ -5,12 +5,13 @@ using UnityEngine;
 public class GameWorld : MonoBehaviour {
     [SerializeField] private GameObject block, Player, Ball, leftSide, rightSide;
     private int initalCount = 35;
+    private bool newGame, paused;
     private List<MyObjects> blockList = new List<MyObjects>();
     private BlockPlacer placer;
     private Player player;
     private Ball mainBall;
     private FollowPlayer left, right;
-    private float xOffset = 1.88f;
+    private float xOffset = 1.12f;
     // Start is called before the first frame update
     public void removeBlock(Block block) {
         if (blockList.Contains(block)) {
@@ -38,6 +39,31 @@ public class GameWorld : MonoBehaviour {
         initalizeList();
     }
 
+    public bool isPaused() {
+        return paused;
+    }
+
+    public void setPause() {
+        paused = !paused;
+    }
+
+    public bool isNewGame() {
+        return newGame;
+    }
+
+    public void setNewGame() {
+        newGame = true;
+    }
+
+    private void startGame() {
+        newGame = false;
+    }
+
+    private void Awake() {
+        newGame = true;
+        paused = false;
+    }
+
     void Start() {
         player = Instantiate(Player).GetComponent<Player>();
         mainBall = Instantiate(Ball).GetComponent<Ball>();
@@ -54,8 +80,9 @@ public class GameWorld : MonoBehaviour {
 
     
 
-    // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        if (newGame && Input.GetKeyDown("space")) {
+            startGame();
+        }
     }
 }

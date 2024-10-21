@@ -9,14 +9,6 @@ public class Block : MyObjects {
         gw = world;  // Set the reference to GameWorld
     }
 
-    private void OnTriggerEnter(Collider other) {
-
-        if (gw != null) {
-            gw.removeBlock(this);
-        }
-       Destroy(gameObject);
-    }
-
     // Start is called before the first frame update
     void Awake() {
     }

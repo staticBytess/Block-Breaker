@@ -6,13 +6,14 @@ using UnityEngine;
 
 
 public class Ball : MyObjects {
-    public float speed;
-    private float leftWallX = -9, rightWallX = 9, topWallY = 6.1f;
+    public float speed, maxSpeed = 10, minSpeed = 7, sidesX = 1.12f, defaultY = -2.4f;
+    private float wallX = 9, topWallY = 6.1f;
     private Rigidbody rb;
     private Player player;
     private GameWorld gw;
     private int floor = -5;
-    
+    private bool hasHitBlock = false;
+
 
     public void setPlayer(Player setMe) {
         this.player = setMe;
@@ -22,10 +23,12 @@ public class Ball : MyObjects {
         this.gw = world;
     }
 
+
+
     private bool outOfBounds() {
         float myX = this.transform.position.x;
         float myY = this.transform.position.y;
-        return myX < leftWallX || myX > rightWallX || myY > topWallY;
+        return myX < -wallX || myX > wallX || myY > topWallY;
     }
 
 
@@ -41,28 +44,28 @@ public class Ball : MyObjects {
         newVelocity.x += offset;
 
         rb.velocity = newVelocity;
-        if(Math.Abs(offset) > 1.25) {
-            if(speed < 10) {
-                speed++;
+        if(Math.Abs(offset) > sidesX) {
+            if(speed < maxSpeed) {
+                speed+=2;
             }
 
             //Sends back left or right depending on the side hit
             if (offset < 0) {
-                rb.velocity = new Vector3(-Math.Abs(newVelocity.x), newVelocity.y, newVelocity.z);
+                rb.velocity = new Vector3(-Math.Abs(newVelocity.x)-1, newVelocity.y, newVelocity.z);
             }
             else {
-                rb.velocity = new Vector3(Math.Abs(newVelocity.x), newVelocity.y, newVelocity.z);
+                rb.velocity = new Vector3(Math.Abs(newVelocity.x+1), newVelocity.y, newVelocity.z);
 
             }
 
         }
-        else if (speed > 7 && Math.Abs(offset) < 1) {
+        else if (speed > minSpeed && Math.Abs(offset) < 1) {
             speed--;
         }
     }
 
-    private void OnTriggerEnter(Collider collision) { 
-            // Reflect the ball regardless of what it collides with
+    private void OnTriggerEnter(Collider collision) {
+        if (!hasHitBlock) {
             Vector3 normal = collision.transform.up; // Use the normal of the surface
             Vector3 incomingVector = rb.velocity; // Get the current velocity of the ball
 
@@ -71,11 +74,18 @@ public class Ball : MyObjects {
 
             // Set the new velocity of the ball
             rb.velocity = reflectedVector.normalized * speed;
+        }
+        if (collision.CompareTag("Block") && !hasHitBlock) {
+            Block block = collision.GetComponent<Block>();
+            gw.removeBlock(block); // Remove the block from the GameWorld
+            Destroy(block.gameObject); // Destroy the block
+            hasHitBlock = true;
+        }
+
 
         if (collision.gameObject == player.gameObject) {
             //add horizontal movement based on distance from center
             addHorizontalMovement();
-
         }
     }
 
@@ -84,21 +94,30 @@ public class Ball : MyObjects {
         rb.velocity = new Vector3(0, 1, 0) * speed; 
     }
 
+    private void followPlayer() {
+        this.transform.position = new Vector3(player.transform.position.x, defaultY, 0);
+    }
+
     private void resetGame() {
         gw.resetGame();
         resetBall();
         player.transform.position = new Vector3(0, -3f, 0);
-       
     }
 
-
     void Update() {
-        if(this.transform.position.y < floor) {
+        hasHitBlock = false;
+        if (gw.isNewGame()) {
+        followPlayer();
+        }
+        else if(this.transform.position.y < floor) {
             resetGame();
+            gw.setNewGame();
+        }
+        else if (outOfBounds()) {
+            resetBall();
+            gw.setNewGame();
         }
 
-        if (outOfBounds()) {
-            resetBall();
-        }
+        Debug.Log("new game: " + gw.isNewGame());
     }
 }
