@@ -6,3 +6,7 @@
 /Library
 /Library
 *.meta
+/Library
+/Library/PackageCache/com.unity.collab-proxy@2.5.2
+/Library/PackageCache
+/Library
