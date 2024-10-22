@@ -9,7 +9,7 @@ MonoImporter:
   - Ball: {fileID: 3105167176694352407, guid: 79989dc62e6987447b955d1a375ec2d2, type: 3}
   - leftSide: {fileID: 8953292129258253805, guid: 858d6cb41eb9dbf46ab2cbe725e592be, type: 3}
   - rightSide: {fileID: 3003216035257457752, guid: a46c1e7d837d6b6479639e4744ec11f3, type: 3}
-  - gameState: {fileID: 1712934120726362716, guid: 6547c777df93d1045803296c78c88efe, type: 3}
+  - spaceText: {fileID: 3488707162991225584, guid: 73950983ae3c0984da525fd3efde6b6f, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

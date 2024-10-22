@@ -12,7 +12,7 @@ public class Ball : MyObjects {
     private Player player;
     private GameWorld gw;
     private int floor = -5;
-    private bool hasHitBlock = false;
+    private bool hasHitBlock, follow;
 
 
     public void setPlayer(Player setMe) {
@@ -35,7 +35,7 @@ public class Ball : MyObjects {
     void Start() {
         speed = 7f;
         rb = GetComponent<Rigidbody>();
-        resetBall(); // Initialize the ball's velocity
+        setBall(); // Initialize the ball's velocity
     }
 
     public void addHorizontalMovement() {
@@ -74,6 +74,7 @@ public class Ball : MyObjects {
 
             // Set the new velocity of the ball
             rb.velocity = reflectedVector.normalized * speed;
+            gw.incrementBounce();
         }
         if (collision.CompareTag("Block") && !hasHitBlock) {
             Block block = collision.GetComponent<Block>();
@@ -85,39 +86,41 @@ public class Ball : MyObjects {
 
         if (collision.gameObject == player.gameObject) {
             //add horizontal movement based on distance from center
+            gw.incrementBounce();
             addHorizontalMovement();
         }
     }
 
-    private void resetBall() {
+    public void setBall() {
+        follow = true;
         this.transform.position = new Vector3(0, -2.4f, 0);
         rb.velocity = new Vector3(0, 1, 0) * speed; 
+    }
+
+    public void freezeBall(){
+        rb.velocity = new Vector3(0, 0, 0);
+    }
+
+    public void startBall(){
+        follow = false;
     }
 
     private void followPlayer() {
         this.transform.position = new Vector3(player.transform.position.x, defaultY, 0);
     }
 
-    private void resetGame() {
-        gw.resetGame();
-        resetBall();
-        player.transform.position = new Vector3(0, -3f, 0);
-    }
-
     void Update() {
         hasHitBlock = false;
-        if (gw.isNewGame()) {
+
+        if (follow) {
         followPlayer();
         }
         else if(this.transform.position.y < floor) {
-            resetGame();
-            gw.setNewGame();
+            gw.showResults();
         }
         else if (outOfBounds()) {
-            resetBall();
-            gw.setNewGame();
+            setBall();
+            follow = true;
         }
-
-        Debug.Log("new game: " + gw.isNewGame());
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameWorld : MonoBehaviour {
     [SerializeField] private GameObject block, Player, Ball, leftSide, rightSide;
-    private int initalCount = 35;
-    private bool newGame, paused;
+    private int initalCount = 35, totalBounces = 0;
+    private bool newAttempt, gameOver;
     private List<MyObjects> blockList = new List<MyObjects>();
     private BlockPlacer placer;
     private Player player;
@@ -16,6 +16,10 @@ public class GameWorld : MonoBehaviour {
     public void removeBlock(Block block) {
         if (blockList.Contains(block)) {
             blockList.Remove(block);  // Remove the block from the list
+        }
+
+         if (blockList.Count < 1){
+            showResults();
         }
     }
 
@@ -39,29 +43,39 @@ public class GameWorld : MonoBehaviour {
         initalizeList();
     }
 
-    public bool isPaused() {
-        return paused;
+    public void setLevel(){
+        gameOver = false;
+        newAttempt = true;
+        mainBall.setBall();
+        TextManager.Instance.clearScreen();
+        TextManager.Instance.enableSpaceText();
+        initalizeList();
+        player.transform.position = new Vector3(0, -3f, 0);
+        totalBounces = 0;
     }
 
-    public void setPause() {
-        paused = !paused;
+     public void startLevel(){
+        TextManager.Instance.clearScreen();
+        mainBall.startBall();
+        newAttempt = false;
     }
 
-    public bool isNewGame() {
-        return newGame;
-    }
-
-    public void setNewGame() {
-        newGame = true;
-    }
-
-    private void startGame() {
-        newGame = false;
+    public bool isNewAttempt() {
+        return newAttempt;
     }
 
     private void Awake() {
-        newGame = true;
-        paused = false;
+        newAttempt = true;
+        
+    }
+
+    public void showResults(){
+        if (blockList.Count < 1){
+            TextManager.Instance.gameWon();
+        }
+        TextManager.Instance.showBounces(totalBounces);
+        mainBall.freezeBall();
+        gameOver = true;
     }
 
     void Start() {
@@ -74,15 +88,23 @@ public class GameWorld : MonoBehaviour {
         left.setOffsetPlayer(-xOffset, player);
         right.setOffsetPlayer(xOffset, player);
         placer = gameObject.AddComponent<BlockPlacer>();
+        
 
         initalizeList();
+    }
+
+    public void incrementBounce(){
+        totalBounces++;
     }
 
     
 
     void Update() {
-        if (newGame && Input.GetKeyDown("space")) {
-            startGame();
+        if (newAttempt && Input.GetKeyDown("space")) {
+            startLevel();
+        }
+        else if (gameOver && Input.GetKeyDown("space")) {
+            setLevel();
         }
     }
 }
