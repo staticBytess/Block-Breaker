@@ -6,13 +6,17 @@ using UnityEngine;
 
 
 public class Ball : MyObjects {
-    public float speed, maxSpeed = 10, minSpeed = 7, sidesX = 1.12f, defaultY = -2.4f;
+    public float speed, maxSpeed = 30, minSpeed = 10, sidesX = 1.12f, defaultY = -2.4f;
     private float wallX = 9, topWallY = 6.1f;
     private Rigidbody rb;
     private Player player;
     private GameWorld gw;
     private int floor = -5;
-    private bool hasHitBlock, follow;
+    private bool hasHitBlock, follow, ballReset;
+
+    private void Awake() {
+        DontDestroyOnLoad(gameObject);
+    }
 
 
     public void setPlayer(Player setMe) {
@@ -23,17 +27,14 @@ public class Ball : MyObjects {
         this.gw = world;
     }
 
-
-
     private bool outOfBounds() {
         float myX = this.transform.position.x;
         float myY = this.transform.position.y;
         return myX < -wallX || myX > wallX || myY > topWallY;
     }
 
-
     void Start() {
-        speed = 7f;
+        speed = 8f;
         rb = GetComponent<Rigidbody>();
         setBall(); // Initialize the ball's velocity
     }
@@ -41,39 +42,43 @@ public class Ball : MyObjects {
     public void addHorizontalMovement() {
         float offset = this.transform.position.x - player.getXPos();
         Vector3 newVelocity = rb.velocity;
-        newVelocity.x += offset;
 
         rb.velocity = newVelocity;
-        if(Math.Abs(offset) > sidesX) {
-            if(speed < maxSpeed) {
-                speed+=2;
-            }
+        float xVelocity = newVelocity.x;
+        float speed = rb.velocity.magnitude;
 
-            //Sends back left or right depending on the side hit
-            if (offset < 0) {
-                rb.velocity = new Vector3(-Math.Abs(newVelocity.x)-1, newVelocity.y, newVelocity.z);
-            }
-            else {
-                rb.velocity = new Vector3(Math.Abs(newVelocity.x+1), newVelocity.y, newVelocity.z);
-
-            }
-
-        }
-        else if (speed > minSpeed && Math.Abs(offset) < 1) {
+        if(Math.Abs(offset) < sidesX/4 && (int)speed > minSpeed){
             speed--;
         }
+        else if ((int)speed < maxSpeed){
+            speed++;
+        }
+        if (offset < 0) {
+            xVelocity += -Math.Abs(offset * 1.25f) - 1;
+        } else {
+            xVelocity += Math.Abs(offset * 1.25f) + 1;
+        }
+
+       
+        newVelocity = new Vector3(xVelocity, newVelocity.y, 0);
+        newVelocity = newVelocity.normalized * speed;
+        rb.velocity = new Vector3(newVelocity.x, newVelocity.y, rb.velocity.z);
+        transform.position += new Vector3(xVelocity * Time.deltaTime, 0, 0);
     }
 
     private void OnTriggerEnter(Collider collision) {
         if (!hasHitBlock) {
-            Vector3 normal = collision.transform.up; // Use the normal of the surface
+           Vector3 normal = collision.transform.up; // Use the normal of the surface
             Vector3 incomingVector = rb.velocity; // Get the current velocity of the ball
+
+            // Store the current speed (magnitude of the velocity)
+            float currentSpeed = rb.velocity.magnitude;
 
             // Reflect the incoming vector based on the normal of the surface
             Vector3 reflectedVector = Vector3.Reflect(incomingVector, normal);
 
-            // Set the new velocity of the ball
-            rb.velocity = reflectedVector.normalized * speed;
+            // Set the new velocity of the ball with the same speed
+            rb.velocity = reflectedVector.normalized * currentSpeed;
             gw.incrementBounce();
         }
         if (collision.CompareTag("Block") && !hasHitBlock) {
@@ -111,8 +116,10 @@ public class Ball : MyObjects {
 
     void Update() {
         hasHitBlock = false;
-
-        if (follow) {
+        if (ballReset && Input.GetKeyDown("space")) {
+            ballReset = false;
+        }
+        else if (follow) {
         followPlayer();
         }
         else if(this.transform.position.y < floor) {
@@ -121,6 +128,7 @@ public class Ball : MyObjects {
         else if (outOfBounds()) {
             setBall();
             follow = true;
+            ballReset = true;
         }
     }
 }

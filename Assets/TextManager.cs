@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class TextManager : MonoBehaviour
-{
-
+public class TextManager : MonoBehaviour {
     public static TextManager Instance { get; private set; }
-
     public TMP_Text spaceText, levelWonScreen, results;
+    public Canvas mainCanvas;
 
     private void Awake() {
         if (Instance == null) {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(mainCanvas.gameObject);  // Apply to the root Canvas
         } else {
             Destroy(gameObject);
         }
@@ -32,7 +31,9 @@ public class TextManager : MonoBehaviour
         results.gameObject.SetActive(true);
     }
 
-    public void gameWon(){
+    public void gameWon(int level){
+        levelWonScreen.text = "Level " + level
+                            + " won!";
         levelWonScreen.gameObject.SetActive(true);
     }
 

@@ -357,8 +357,10 @@
 "Assets/BlockPlacer.cs"
 "Assets/FollowPlayer.cs"
 "Assets/GameWorld.cs"
+"Assets/LevelManager.cs"
 "Assets/MyObjects.cs"
 "Assets/Player.cs"
+"Assets/TextManager.cs"
 -langversion:9.0
 /deterministic
 /optimize+

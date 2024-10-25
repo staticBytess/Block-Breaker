@@ -67,6 +67,7 @@
     <Compile Include="Assets\GameWorld.cs" />
     <Compile Include="Assets\Player.cs" />
     <Compile Include="Assets\FollowPlayer.cs" />
+    <Compile Include="Assets\LevelManager.cs" />
     <Compile Include="Assets\Block.cs" />
     <Compile Include="Assets\Ball.cs" />
     <Compile Include="Assets\MyObjects.cs" />

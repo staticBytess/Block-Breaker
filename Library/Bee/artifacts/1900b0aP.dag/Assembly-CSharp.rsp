@@ -310,9 +310,11 @@
 "Assets/Ball.cs"
 "Assets/Block.cs"
 "Assets/BlockPlacer.cs"
+"Assets/FollowPlayer.cs"
 "Assets/GameWorld.cs"
 "Assets/MyObjects.cs"
 "Assets/Player.cs"
+"Assets/TextManager.cs"
 -langversion:9.0
 /deterministic
 /optimize+

@@ -3,7 +3,9 @@ guid: 61d8ed78e2d21bc49bd6cd754795a532
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - rowRemover: {fileID: 5477023239871039335, guid: bf200ef47970a2e4993245d4e9bbedd4, type: 3}
+  - colRemover: {fileID: 5477023239871039335, guid: 76e06f4f329b3b74c99831d4dff88105, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

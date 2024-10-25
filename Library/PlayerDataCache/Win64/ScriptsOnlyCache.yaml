@@ -3,10 +3,20 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - Ball
     - Block
+    - FollowPlayer
     - GameWorld
     - Player
+    - TextManager
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
+    Unity.TextMeshPro:
+    - TMPro.TMP_FontAsset
+    - TMPro.TMP_Settings
+    - TMPro.TMP_SpriteAsset
+    - TMPro.TMP_StyleSheet
+    Unity.TextMeshPro.dll:
+    - TMPro.TMP_FontAsset
+    - TMPro.TextMeshProUGUI
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
@@ -17,7 +27,36 @@ ScriptsOnlyBuild:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     - UnityEditor.TestTools.TestRunner.TestRun.TestJobDataHolder
-  serializedClasses: {}
+    UnityEngine.UI.dll:
+    - UnityEngine.EventSystems.EventSystem
+    - UnityEngine.EventSystems.StandaloneInputModule
+    - UnityEngine.UI.CanvasScaler
+    - UnityEngine.UI.GraphicRaycaster
+  serializedClasses:
+    Unity.TextMeshPro:
+    - TMPro.FaceInfo_Legacy
+    - TMPro.FontAssetCreationSettings
+    - TMPro.KerningTable
+    - TMPro.TMP_Character
+    - TMPro.TMP_FontFeatureTable
+    - TMPro.TMP_FontWeightPair
+    - TMPro.TMP_GlyphAdjustmentRecord
+    - TMPro.TMP_GlyphPairAdjustmentRecord
+    - TMPro.TMP_GlyphValueRecord
+    - TMPro.TMP_Sprite
+    - TMPro.TMP_SpriteCharacter
+    - TMPro.TMP_SpriteGlyph
+    - TMPro.TMP_Style
+    - TMPro.VertexGradient
+    UnityEngine.CoreModule:
+    - UnityEngine.Events.PersistentCallGroup
+    UnityEngine.TextCoreFontEngineModule:
+    - UnityEngine.TextCore.FaceInfo
+    - UnityEngine.TextCore.Glyph
+    - UnityEngine.TextCore.GlyphMetrics
+    - UnityEngine.TextCore.GlyphRect
+    UnityEngine.UI:
+    - UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
   methodsToPreserve: []
   sceneClasses:
     Assets/Scenes/SampleScene.unity:
@@ -39,6 +78,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
+    - Class: 49
+      Script: {instanceID: 0}
     - Class: 54
       Script: {instanceID: 0}
     - Class: 65
@@ -52,20 +93,50 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1752}
+      Script: {instanceID: 1778}
     - Class: 114
-      Script: {instanceID: 3708}
+      Script: {instanceID: 2190}
     - Class: 114
-      Script: {instanceID: 5210}
+      Script: {instanceID: 2610}
     - Class: 114
-      Script: {instanceID: 6456}
+      Script: {instanceID: 2812}
+    - Class: 114
+      Script: {instanceID: 3740}
+    - Class: 114
+      Script: {instanceID: 4070}
+    - Class: 114
+      Script: {instanceID: 4320}
+    - Class: 114
+      Script: {instanceID: 4872}
+    - Class: 114
+      Script: {instanceID: 5012}
+    - Class: 114
+      Script: {instanceID: 5244}
+    - Class: 114
+      Script: {instanceID: 5572}
+    - Class: 114
+      Script: {instanceID: 5722}
+    - Class: 114
+      Script: {instanceID: 6036}
+    - Class: 114
+      Script: {instanceID: 6500}
+    - Class: 114
+      Script: {instanceID: 23508}
     - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
       Script: {instanceID: 0}
     - Class: 135
       Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
     - Class: 196
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
       Script: {instanceID: 0}
   scriptHashData:
   - hash:
@@ -106,7 +177,7 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: fe2a70ca38512aa6b90e19c6cb0a8017
+      Hash: 33be23dee28787f19466c6b90972c9e2
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: Ball
@@ -556,6 +627,12 @@ ScriptsOnlyBuild:
     className: UnityOnTriggerStayMessageListener
   - hash:
       serializedVersion: 2
+      Hash: 46b02ca8d4264dd8038cc4edbf58e3c3
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: FollowPlayer
+  - hash:
+      serializedVersion: 2
       Hash: 10c17b309bdca62b4d7fbaf113ed4ca0
     assemblyName: UnityEngine.UI
     namespaceName: UnityEngine.UI
@@ -622,7 +699,7 @@ ScriptsOnlyBuild:
     className: UnityOnDeselectMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 5fb7063d2f5fdfe8a37dfb574d50c077
+      Hash: 3ad64b3522cdbb2b4c182b40d948554b
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: GameWorld
@@ -920,8 +997,14 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core
     namespaceName: Unity.VisualScripting
     className: UnityOnSliderValueChangedMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: fee39a0be1d6746bc1134c03522051f7
+    assemblyName: Assembly-CSharp
+    namespaceName: 
+    className: TextManager
   platform: 19
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: C:/Users/David/Documents/programming projects/Unity Projects/Block
-    Breaker/Versions/v1/Block Breaker.exe
+  playerPath: C:/Users/David/Documents/Unity Projects/Block-Breaker/Versions/v2/Block
+    Breaker.exe

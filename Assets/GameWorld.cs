@@ -1,26 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameWorld : MonoBehaviour {
-    [SerializeField] private GameObject block, Player, Ball, leftSide, rightSide;
-    private int initalCount = 35, totalBounces = 0;
+    [SerializeField] private GameObject block, Player, Ball, leftSide, rightSide, rightWall, leftWall, topWall, backDrop, mainLight;
+    [SerializeField] private Block rowRemover, colRemover;
+    private int totalBounces = 0, level = 1, maxLevel = 2;
     private bool newAttempt, gameOver;
     private List<MyObjects> blockList = new List<MyObjects>();
+    private List<int> blocksPerLevel = new List<int>{1, 25};
     private BlockPlacer placer;
     private Player player;
     private Ball mainBall;
     private FollowPlayer left, right;
     private float xOffset = 1.12f;
-    // Start is called before the first frame update
-    public void removeBlock(Block block) {
-        if (blockList.Contains(block)) {
-            blockList.Remove(block);  // Remove the block from the list
-        }
 
-         if (blockList.Count < 1){
-            showResults();
-        }
+    void Start() {
+        newAttempt = true;
+        DontDestroyOnLoad(gameObject);
+        
+        player = Instantiate(Player).GetComponent<Player>();
+        mainBall = Instantiate(Ball).GetComponent<Ball>();
+        mainBall.setPlayer(player);
+        mainBall.setWorld(this);
+        left = Instantiate(leftSide).GetComponent<FollowPlayer>();
+        right = Instantiate(rightSide).GetComponent<FollowPlayer>();
+        left.setOffsetPlayer(-xOffset, player);
+        right.setOffsetPlayer(xOffset, player);
+        placer = gameObject.AddComponent<BlockPlacer>();
+        placer.addColRemover(colRemover);
+        placer.addRowRemover(rowRemover);
+
+
+        DontDestroyOnLoad(player);
+        DontDestroyOnLoad(mainBall);
+        DontDestroyOnLoad(left);
+        DontDestroyOnLoad(right);
+        DontDestroyOnLoad(placer);
+        DontDestroyOnLoad(rightWall);
+        DontDestroyOnLoad(leftWall);
+        DontDestroyOnLoad(topWall);
+        DontDestroyOnLoad(backDrop);
+        DontDestroyOnLoad(mainLight);
+
+        initalizeList(); 
+        //might be setLevel() instead ??
     }
 
     private void initalizeList() {
@@ -29,14 +54,37 @@ public class GameWorld : MonoBehaviour {
         }   
         blockList.Clear();
 
-        for (int i = 0; i < initalCount; i++) {
+        int levelIndex = level - 1;
 
-            Block blockInstance = Instantiate(block).GetComponent<Block>();
-            blockInstance.setGameWorld(this);
-            blockList.Add(blockInstance);
+        if( levelIndex < blocksPerLevel.Count){
+            for (int i = 0; i < blocksPerLevel[level-1]; i++) {
+                Block blockInstance = Instantiate(block).GetComponent<Block>();
+                blockInstance.setGameWorld(this);
+                blockList.Add(blockInstance);
+            }
+            placer.placeBlocks(blockList, blocksPerLevel[levelIndex]);
         }
-        
-        placer.placeBlocks(blockList);
+       customizeLevel();
+    }
+
+    private void customizeLevel(){
+        if(level==1){
+            /*placer.removeRow(2);
+            placer.removeRow(4);*/
+        }
+        else if(level==2){
+            placer.removeCol(3);
+        }
+    }
+    // Start is called before the first frame update
+    public void removeBlock(Block block) {
+        if (blockList.Contains(block)) {
+            blockList.Remove(block);  // Remove the block from the list
+        }
+
+        if (blockList.Count < 1){
+            showResults();
+        }
     }
 
     public void resetGame() {
@@ -44,6 +92,9 @@ public class GameWorld : MonoBehaviour {
     }
 
     public void setLevel(){
+        if(level>maxLevel){
+            level = 1;
+        }
         gameOver = false;
         newAttempt = true;
         mainBall.setBall();
@@ -53,7 +104,7 @@ public class GameWorld : MonoBehaviour {
         player.transform.position = new Vector3(0, -3f, 0);
         totalBounces = 0;
     }
-
+ 
      public void startLevel(){
         TextManager.Instance.clearScreen();
         mainBall.startBall();
@@ -64,40 +115,20 @@ public class GameWorld : MonoBehaviour {
         return newAttempt;
     }
 
-    private void Awake() {
-        newAttempt = true;
-        
-    }
-
     public void showResults(){
         if (blockList.Count < 1){
-            TextManager.Instance.gameWon();
+            TextManager.Instance.gameWon(level);
+            level++;
+            //LevelManager.Instance.loadNextLevel(level);
         }
         TextManager.Instance.showBounces(totalBounces);
         mainBall.freezeBall();
         gameOver = true;
     }
 
-    void Start() {
-        player = Instantiate(Player).GetComponent<Player>();
-        mainBall = Instantiate(Ball).GetComponent<Ball>();
-        mainBall.setPlayer(player);
-        mainBall.setWorld(this);
-        left = Instantiate(leftSide).GetComponent<FollowPlayer>();
-        right = Instantiate(rightSide).GetComponent<FollowPlayer>();
-        left.setOffsetPlayer(-xOffset, player);
-        right.setOffsetPlayer(xOffset, player);
-        placer = gameObject.AddComponent<BlockPlacer>();
-        
-
-        initalizeList();
-    }
-
     public void incrementBounce(){
         totalBounces++;
     }
-
-    
 
     void Update() {
         if (newAttempt && Input.GetKeyDown("space")) {
